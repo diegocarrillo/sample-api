@@ -1,12 +1,18 @@
 from typing import Optional
-from fastapi import FastAPI
+from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import RedirectResponse
+
 
 app = FastAPI()
 
 @app.get("/")
-def read_root():
-    return {"Hello": "World"}
+def root():
+    return {"message": "Hello World"}
 
-app.get("/items/{item_id}")
-def read_item(item_id: int, q: Optional[str] = None):
-    return {"item_id": item_id, "q": q}
+@app.get("/learning/{item}")
+async def redirect_typer(item):
+    learning_pages = ["coursera", "edx", "acloudguru" ]
+    for i in learning_pages:
+        if i == item:
+            result = "https://%s.com" % item
+            return RedirectResponse(result)
